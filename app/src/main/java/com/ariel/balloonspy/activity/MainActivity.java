@@ -430,7 +430,6 @@ public class MainActivity extends AppCompatActivity implements PictureCapturingL
             Log.i("GPS", message);
             Utils.showToast(MainActivity.this, "GPS:" + message);
             LoRaSendMessage.performPostCall(message, 4);
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
 
 
             if (null != lastLocation) {
@@ -851,6 +850,7 @@ public class MainActivity extends AppCompatActivity implements PictureCapturingL
                     cameraClosed = false;
                     videoService.setVidTime(picTime);
                     videoService.startCapturing(MainActivity.this);
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
                 }
             } else if (receivedNotificationText.startsWith("Video")) {
                 String[] parts = receivedNotificationText.split("-");
@@ -869,6 +869,7 @@ public class MainActivity extends AppCompatActivity implements PictureCapturingL
                         videoService.startCapturing(MainActivity.this);
                     }
                 }
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
             } else if (receivedNotificationText.equals("Gallery")) {
                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
             }

@@ -20,10 +20,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.provider.Settings;
@@ -149,8 +151,6 @@ public class MainActivity extends AppCompatActivity implements PictureCapturingL
     private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
     private static final String ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
     private AlertDialog enableNotificationListenerAlertDialog;
-
-
 
 
     public static MainActivity getInstance() {
@@ -358,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements PictureCapturingL
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED) {
+                        PackageManager.PERMISSION_GRANTED) {
             return;
         }
         /*
@@ -430,6 +430,8 @@ public class MainActivity extends AppCompatActivity implements PictureCapturingL
             Log.i("GPS", message);
             Utils.showToast(MainActivity.this, "GPS:" + message);
             LoRaSendMessage.performPostCall(message, 4);
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+
 
             if (null != lastLocation) {
                 float distanceInMeters = lastLocation.distanceTo(location);
@@ -541,13 +543,11 @@ public class MainActivity extends AppCompatActivity implements PictureCapturingL
         return temp;
     }
 
-    public void onCaptureDone(String pictureUrl, byte[] pictureData)
-    {
+    public void onCaptureDone(String pictureUrl, byte[] pictureData) {
 
     }
 
-    public void onDoneCapturingAllPhotos(TreeMap<String, byte[]> picturesTaken)
-    {
+    public void onDoneCapturingAllPhotos(TreeMap<String, byte[]> picturesTaken) {
 
     }
 
@@ -801,7 +801,6 @@ public class MainActivity extends AppCompatActivity implements PictureCapturingL
     }
 
 
-
     private boolean isNotificationServiceEnabled() {
         String pkgName = getPackageName();
         final String flat = Settings.Secure.getString(getContentResolver(),
@@ -844,7 +843,7 @@ public class MainActivity extends AppCompatActivity implements PictureCapturingL
     public class ImageChangeBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            int receivedNotificationCode = intent.getIntExtra("Notification Code",-1);
+            int receivedNotificationCode = intent.getIntExtra("Notification Code", -1);
             String receivedNotificationText = intent.getStringExtra("Notification Text");
             changeInterceptedNotificationImage(receivedNotificationCode);
             if (receivedNotificationText.equals("Photo")) {
@@ -853,8 +852,7 @@ public class MainActivity extends AppCompatActivity implements PictureCapturingL
                     videoService.setVidTime(picTime);
                     videoService.startCapturing(MainActivity.this);
                 }
-            }
-            else if (receivedNotificationText.startsWith("Video")) {
+            } else if (receivedNotificationText.startsWith("Video")) {
                 String[] parts = receivedNotificationText.split("-");
                 if ((parts.length == 2)) {
                     String videoTimeText = parts[1];
@@ -864,14 +862,15 @@ public class MainActivity extends AppCompatActivity implements PictureCapturingL
                         videoService.setVidTime(videoTime);
                         videoService.startCapturing(MainActivity.this);
                     }
-                }
-                else {
+                } else {
                     if (videoService != null) {
                         cameraClosed = false;
                         videoService.setVidTime(vidTime);
                         videoService.startCapturing(MainActivity.this);
                     }
                 }
+            } else if (receivedNotificationText.equals("Gallery")) {
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
             }
         }
     }

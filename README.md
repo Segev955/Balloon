@@ -38,7 +38,7 @@ To replicate or further develop the experiment, follow these steps:
 
 ## Usage of the Application
 
-The application developed for the balloon experiment allows receiving messages during the experiment. When the following messages are received, the application performs the corresponding actions:
+The application developed for the balloon experiment allows receiving messages from Meshtastic application during the experiment. When the following messages are received, the application performs the corresponding actions:
 
 <b> Photo</b> - When a "Photo" message is received, the application activates the device's camera and captures a photo. The captured photo is stored in the device's internal memory.
 

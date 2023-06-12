@@ -36,6 +36,20 @@ To replicate or further develop the experiment, follow these steps:
 
 5. Send messages using the Mashtastic application and observe the custom application's behavior in capturing and storing media.
 
+## Usage of the Application
+
+The application developed for the balloon experiment allows receiving messages during the experiment. When the following messages are received, the application performs the corresponding actions:
+
+<b> Photo</b> - When a "Photo" message is received, the application activates the device's camera and captures a photo. The captured photo is stored in the device's internal memory.
+
+<b>Video</b> - When a "Video" message is received, the application activates the device's camera and starts recording a video for 5 seconds. The recorded video is stored in the device's internal memory.
+
+<b>Video-x</b> - When a "Video-x" message is received, the application activates the device's camera and starts recording a video for x seconds (replace x with the desired number of seconds). The recorded video is stored in the device's internal memory.
+
+<b>Gallery</b> - When a "Gallery" message is received, the application refreshes the built-in gallery of the device. This action displays the newly captured or recorded media in the gallery.
+
+These functions allow the user to receive and view photos and videos from the experiment.
+
 ## Contributing
 
 We welcome contributions to enhance the functionality and performance of the custom application. If you would like to contribute, please follow these steps:
